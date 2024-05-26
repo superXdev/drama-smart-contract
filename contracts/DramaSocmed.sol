@@ -2,7 +2,7 @@
 pragma solidity ^0.7.0;
 
 contract Ownable {
-    address public _owner;
+    address _owner;
 
     constructor() {
         _owner = msg.sender;
@@ -15,6 +15,10 @@ contract Ownable {
 }
 
 contract DramaSocmed is Ownable {
+    event DramaBaru(uint256 id, string kode, string deskripsi, address indexed pembuat);
+    event TopikBaru(string link, uint256 idDrama, address indexed pembuat);
+    event HapusTopik(string link, uint256 idDrama, address indexed pembuat);
+
     struct Drama {
         string kode;
         string deskripsi;
@@ -43,6 +47,8 @@ contract DramaSocmed is Ownable {
         lastId++;
         drama[lastId] = newDrama;
 
+        emit DramaBaru(lastId, kode, deskripsi, msg.sender);
+
         return lastId;
     }
 
@@ -57,13 +63,18 @@ contract DramaSocmed is Ownable {
 
         topics[idDrama].push(newTopic);
 
+        emit TopikBaru(link, idDrama, msg.sender);
+
         return topics[idDrama].length - 1;
     }
 
     function hapusTopikDrama(uint256 idDrama, uint256 idTopik) external returns (bool) {
         require(topics[idDrama][idTopik].pembuat == msg.sender, "You don't have permission");
 
+        string memory link = topics[idDrama][idTopik].link;
         delete topics[idDrama][idTopik];
+
+        emit HapusTopik(link, idDrama, msg.sender);
 
         return true;
     }
