@@ -9,7 +9,7 @@ DramaSocmed adalah Smart Contract Ethereum yang memungkinkan pengguna untuk mena
 -  **Menghapus Topik**: Pengguna dapat menghapus topik yang mereka buat.
 -  **Menghancurkan Contract**: Pemilik contract dapat menghancurkan contract dan mengirim sisa ether kembali kepada pemilik.
 
-#### Functions
+### Functions
 
 -  `tambahDramaBaru(string memory kode, string memory deskripsi) external returns (uint256)`: Menambahkan drama baru dan mengembalikan ID drama baru.
 -  `tambahTopikDrama(string memory link, uint256 idDrama) external returns (uint256)`: Menambahkan topik baru ke drama yang ada dan mengembalikan ID topik baru.
@@ -50,21 +50,28 @@ DramaSocmed adalah Smart Contract Ethereum yang memungkinkan pengguna untuk mena
 
 Kamu dapat berinteraksi dengan Contract menggunakan Truffle console atau script yang kamu buat sendiri. Berikut adalah beberapa contoh perintah:
 
-```sh
-// Masuk ke Truffle console
-truffle console
+Masuk ke Truffle console
 
+```sh
+truffle console
+```
+
+```js
 // Tambah drama baru
-DramaSocmed.deployed().then(instance => instance.tambahDramaBaru("Kode123", "Deskripsi drama"))
+DramaSocmed.deployed().then((instance) =>
+   instance.tambahDramaBaru("Kode123", "Deskripsi drama")
+);
 
 // Tambah topik baru ke drama dengan ID 1
-DramaSocmed.deployed().then(instance => instance.tambahTopikDrama("http://linktopik.com", 1))
+DramaSocmed.deployed().then((instance) =>
+   instance.tambahTopikDrama("http://linktopik.com", 1)
+);
 
 // Hapus topik dengan ID 0 dari drama dengan ID 1
-DramaSocmed.deployed().then(instance => instance.hapusTopikDrama(1, 0))
+DramaSocmed.deployed().then((instance) => instance.hapusTopikDrama(1, 0));
 
 // Hancurkan contract (hanya pemilik yang dapat melakukan ini)
-DramaSocmed.deployed().then(instance => instance.destroyContract())
+DramaSocmed.deployed().then((instance) => instance.destroyContract());
 ```
 
 ## Lisensi
