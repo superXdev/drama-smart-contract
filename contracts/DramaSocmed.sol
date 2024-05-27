@@ -1,18 +1,6 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.7.0;
-
-contract Ownable {
-    address _owner;
-
-    constructor() {
-        _owner = msg.sender;
-    }
-
-    modifier onlyOwner {
-        require(msg.sender == _owner, "You don't have access to do this");
-        _;
-    }
-}
+import "./Ownable.sol";
 
 contract DramaSocmed is Ownable {
     event DramaBaru(uint256 id, string kode, string deskripsi, address indexed pembuat);
