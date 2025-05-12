@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.7.0;
+pragma solidity ^0.8.0;
 
 contract Ownable {
     address public _owner;
@@ -11,7 +11,7 @@ contract Ownable {
         _owner = msg.sender;
     }
 
-    modifier onlyOwner {
+    modifier onlyOwner() {
         require(msg.sender == _owner, "You don't have access to do this");
         _;
     }

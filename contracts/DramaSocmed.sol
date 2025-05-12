@@ -1,11 +1,18 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.7.0;
+pragma solidity ^0.8.0;
+
 import "./Ownable.sol";
 
 contract DramaSocmed is Ownable {
-    event DramaBaru(uint256 id, string kode, string deskripsi, address indexed pembuat);
+    event DramaBaru(
+        uint256 id,
+        string kode,
+        string deskripsi,
+        address indexed pembuat
+    );
     event TopikBaru(string link, uint256 idDrama, address indexed pembuat);
     event HapusTopik(string link, uint256 idDrama, address indexed pembuat);
+    event HapusDrama(uint256 id, address indexed penghapus);
 
     struct Drama {
         string kode;
@@ -24,7 +31,10 @@ contract DramaSocmed is Ownable {
     mapping(uint256 => Drama) public drama;
     mapping(uint256 => Topic[]) public topics;
 
-    function tambahDramaBaru(string memory kode, string memory deskripsi) external returns (uint256) {
+    function tambahDramaBaru(
+        string memory kode,
+        string memory deskripsi
+    ) external returns (uint256) {
         Drama memory newDrama = Drama({
             kode: kode,
             deskripsi: deskripsi,
@@ -40,9 +50,12 @@ contract DramaSocmed is Ownable {
         return lastId;
     }
 
-    function tambahTopikDrama(string memory link, uint256 idDrama) external returns (uint256) {
+    function tambahTopikDrama(
+        string memory link,
+        uint256 idDrama
+    ) external returns (uint256) {
         require(drama[idDrama].waktu > 0, "No drama");
-        
+
         Topic memory newTopic = Topic({
             link: link,
             pembuat: msg.sender,
@@ -56,8 +69,14 @@ contract DramaSocmed is Ownable {
         return topics[idDrama].length - 1;
     }
 
-    function hapusTopikDrama(uint256 idDrama, uint256 idTopik) external returns (bool) {
-        require(topics[idDrama][idTopik].pembuat == msg.sender, "You don't have permission");
+    function hapusTopikDrama(
+        uint256 idDrama,
+        uint256 idTopik
+    ) external returns (bool) {
+        require(
+            topics[idDrama][idTopik].pembuat == msg.sender,
+            "You don't have permission"
+        );
 
         string memory link = topics[idDrama][idTopik].link;
         delete topics[idDrama][idTopik];
@@ -67,7 +86,19 @@ contract DramaSocmed is Ownable {
         return true;
     }
 
-    function destroyContract() public onlyOwner {
-        selfdestruct(msg.sender);
+    function hapusDrama(uint256 idDrama) external returns (bool) {
+        Drama memory targetDrama = drama[idDrama];
+        require(targetDrama.waktu > 0, "Drama not found");
+        require(
+            msg.sender == targetDrama.pembuat || msg.sender == _owner,
+            "You don't have permission"
+        );
+
+        delete drama[idDrama];
+        delete topics[idDrama];
+
+        emit HapusDrama(idDrama, msg.sender);
+
+        return true;
     }
 }
